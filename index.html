@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Finder | OMDB</title>
+    <style>
+        /* Modern Grey & Charcoal Theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #414c55; /* Deep Grey-Blue */
+            color: #667a7f; /* Light Grey Text */
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #3fb0e0; /* Silver Grey */
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            width: 250px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #7f8c8d; /* Solid Grey */
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #da1616; /* Lighter Grey */
+        }
+
+        /* Suggestions List */
+        #suggestions {
+            width: 60%;
+            margin: 10px auto;
+            background: #343667; /* Charcoal Grey */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .item {
+            padding: 12px;
+            border-bottom: 1px solid #dce3e9;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .item:hover {
+            background-color: #2c89e0;
+        }
+
+        /* Movie Details Card */
+        #movie {
+            width: 60%;
+            margin: 20px auto;
+            background: #ecf0f1; /* Off-white/Light Grey for contrast */
+            color: #111211;
+            padding: 20px;
+            border-radius: 8px;
+            display: none; /* Hidden until a movie is selected */
+        }
+
+        #movie img {
+            width: 200px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            margin-bottom: 15px;
+        }
+
+        #movie h2 {
+            margin-top: 0;
+            color: #2c5030;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Movie Finder</h1>
+
+    <div class="search-container">
+        <input type="text" id="movieName" placeholder="Enter movie name...">
+        <button onclick="searchMovies()">Search</button>
+    </div>
+
+    <div id="suggestions"></div>
+    <div id="movie"></div>
+
+    <script>
+        var apiKey = "58871a43";
+
+        function searchMovies() {
+            var name = document.getElementById("movieName").value;
+            var suggestions = document.getElementById("suggestions");
+            var movieDisplay = document.getElementById("movie");
+
+            if (name == "") {
+                alert("Please enter a movie name");
+                return;
+            }
+
+            // Clear previous data
+            suggestions.innerHTML = "Searching...";
+            movieDisplay.style.display = "none";
+
+            var url = "https://www.omdbapi.com/?s=" + name + "&apikey=" + apiKey;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    suggestions.innerHTML = "";
+                    if (data.Response == "True") {
+                        data.Search.forEach(movie => {
+                            var div = document.createElement("div");
+                            div.className = "item";
+                            div.innerHTML = "🎬 " + movie.Title + " (" + movie.Year + ")";
+                            div.onclick = function() { getMovie(movie.imdbID); };
+                            suggestions.appendChild(div);
+                        });
+                    } else {
+                        suggestions.innerHTML = "<div class='item'>No movies found.</div>";
+                    }
+                });
+        }
+
+        function getMovie(id) {
+            var url = "https://www.omdbapi.com/?i=" + id + "&apikey=" + apiKey;
+            var movieDisplay = document.getElementById("movie");
+            var suggestions = document.getElementById("suggestions");
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Hide suggestions and show the movie card
+                    suggestions.innerHTML = "";
+                    movieDisplay.style.display = "block";
+
+                    // Fix for images: Check if Poster exists, otherwise use placeholder
+                    var poster = (data.Poster !== "N/A") ? data.Poster : "https://via.placeholder.com/200x300?text=No+Poster";
+
+                    movieDisplay.innerHTML = 
+                        "<h2>" + data.Title + "</h2>" +
+                        "<img src='" + poster + "' alt='Movie Poster'>" +
+                        "<p><b>Year:</b> " + data.Year + "</p>" +
+                        "<p><b>Actors:</b> " + data.Actors + "</p>" +
+                        "<p><b>Plot:</b> " + data.Plot + "</p>";
+                });
+        }
+    </script>
+
+</body>
+</html>
