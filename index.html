@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <title>Movie Finder | OMDB</title>
     <style>
-        /* Modern Grey & Charcoal Theme */
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #414c55; /* Deep Grey-Blue */
-            color: #667a7f; /* Light Grey Text */
+            background-color: #414c55; 
+            color: #667a7f;
             text-align: center;
             margin: 0;
             padding: 20px;
         }
 
         h1 {
-            color: #3fb0e0; /* Silver Grey */
+            color: #3fb0e0; 
             margin-bottom: 30px;
         }
 
@@ -33,7 +33,7 @@
 
         button {
             padding: 12px 20px;
-            background-color: #7f8c8d; /* Solid Grey */
+            background-color: #7f8c8d; 
             color: white;
             border: none;
             border-radius: 0 4px 4px 0;
@@ -42,14 +42,14 @@
         }
 
         button:hover {
-            background-color: #da1616; /* Lighter Grey */
+            background-color: #da1616; 
         }
 
-        /* Suggestions List */
+
         #suggestions {
             width: 60%;
             margin: 10px auto;
-            background: #343667; /* Charcoal Grey */
+            background: #343667;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -67,15 +67,15 @@
             background-color: #2c89e0;
         }
 
-        /* Movie Details Card */
+        
         #movie {
             width: 60%;
             margin: 20px auto;
-            background: #ecf0f1; /* Off-white/Light Grey for contrast */
+            background: #ecf0f1; 
             color: #111211;
             padding: 20px;
             border-radius: 8px;
-            display: none; /* Hidden until a movie is selected */
+            display: none; 
         }
 
         #movie img {
@@ -116,7 +116,7 @@
                 return;
             }
 
-            // Clear previous data
+
             suggestions.innerHTML = "Searching...";
             movieDisplay.style.display = "none";
 
@@ -148,11 +148,11 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    // Hide suggestions and show the movie card
+
                     suggestions.innerHTML = "";
                     movieDisplay.style.display = "block";
 
-                    // Fix for images: Check if Poster exists, otherwise use placeholder
+
                     var poster = (data.Poster !== "N/A") ? data.Poster : "https://via.placeholder.com/200x300?text=No+Poster";
 
                     movieDisplay.innerHTML = 
